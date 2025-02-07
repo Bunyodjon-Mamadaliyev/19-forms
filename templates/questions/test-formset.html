@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Test Maker - Create Test{% endblock %}
+
+{% block content %}
+<div class="container mx-auto max-w-3xl px-4">
+    <h1 class="text-4xl font-bold mb-8 text-center">Create Test</h1>
+
+    <form class="space-y-6" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label for="{{ form.name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                    {{ form.name.label }}:
+                </label>
+                {{ form.name }}
+            </div>
+
+            <div class="mb-6">
+                <label for="{{ form.lesson.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                    {{ form.lesson.label }}:
+                </label>
+                {{ form.lesson }}
+            </div>
+
+            <div class="border-t border-gray-300 pt-6">
+                <h2 class="text-2xl font-bold mb-4 text-center">Questions</h2>
+
+                <div class="space-y-6" id="questions-container">
+                    {{ question_formset.management_form }}
+                    {% for question_form in question_formset %}
+                    <div class="question-formset border border-gray-300 rounded p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Question {{ forloop.counter }}</h3>
+                        <div class="mb-4">
+                            <label for="{{ question_form.text.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                                {{ question_form.text.label }}:
+                            </label>
+                            {{ question_form.text }}
+                        </div>
+                        <div class="space-y-4">
+                            {% for answer_form in question_form.answers %}
+                            <div>
+                                <label for="{{ answer_form.text.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                                    {{ answer_form.text.label }}:
+                                </label>
+                                {{ answer_form.text }}
+                                <label class="inline-flex items-center mt-2">
+                                    {{ answer_form.is_correct }}
+                                    <span class="ml-2 text-sm text-gray-700">Correct Answer</span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-6">
+                    {% if lesson %}
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            Update Lesson
+                        </button>
+                        <a href="{{ lesson.get_detail_url }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2">
+                            Cancel
+                        </a>
+                    {% else %}
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            Create Test
+                        </button>
+                        <a href="{% url 'questions:list' %}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2">
+                            Cancel
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+
+
